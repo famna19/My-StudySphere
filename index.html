@@ -1,0 +1,1165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>StudySphere - AI-Powered Virtual Study Hub</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Orbitron:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #8a2be2;
+      --primary-light: #b57edc;
+      --primary-dark: #5a189a;
+      --secondary: #ff9e00;
+      --dark: #121212;
+      --darker: #0a0a0a;
+      --light: #f8f9fa;
+      --gray: #e9ecef;
+      --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--dark);
+      color: var(--light);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Navigation */
+    .navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      padding: 1.5rem 5%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: rgba(18, 18, 18, 0.95);
+      backdrop-filter: blur(10px);
+      z-index: 1000;
+      box-shadow: 0 2px 15px rgba(0, 0, 0, 0.3);
+      transition: var(--transition);
+      border-bottom: 1px solid rgba(138, 43, 226, 0.2);
+    }
+
+    .navbar.scrolled {
+      padding: 1rem 5%;
+      box-shadow: 0 5px 20px rgba(138, 43, 226, 0.2);
+      border-bottom: 1px solid rgba(120, 12, 96, 0.4);
+    }
+
+    .logo {
+      font-family: 'Orbitron', sans-serif;
+      font-weight: 700;
+      font-size: 1.8rem;
+      color: var(--primary);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      text-shadow: 0 0 10px rgba(138, 43, 226, 0.4);
+    }
+
+    .logo-icon {
+      animation: float 3s ease-in-out infinite;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+    }
+
+    .nav-links a {
+      position: relative;
+      color: var(--light);
+      text-decoration: none;
+      font-weight: 500;
+      transition: var(--transition);
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background-color: var(--primary);
+      transition: var(--transition);
+    }
+
+    .nav-links a:hover::after {
+      width: 100%;
+    }
+
+    .nav-links a:hover {
+      color: var(--primary-light);
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 0.8rem 2rem;
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: var(--light);
+      border-radius: 50px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: var(--transition);
+      position: relative;
+      overflow: hidden;
+      border: none;
+      box-shadow: 0 4px 15px rgba(138, 43, 226, 0.3);
+    }
+
+    .btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 25px rgba(208, 97, 188, 0.4);
+      background: linear-gradient(135deg, var(--primary-light), var(--primary));
+    }
+
+    .btn::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 5px;
+      height: 5px;
+      background: rgba(255, 255, 255, 0.5);
+      opacity: 0;
+      border-radius: 100%;
+      transform: scale(1, 1) translate(-50%);
+      transform-origin: 50% 50%;
+    }
+
+    .btn:focus:not(:active)::after {
+      animation: ripple 1s ease-out;
+    }
+
+    /* Hero Section */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding: 0 10%;
+      position: relative;
+      overflow: hidden;
+      background: radial-gradient(circle at 70% 30%, rgba(138, 43, 226, 0.1) 0%, transparent 40%);
+    }
+
+    .hero-content {
+      max-width: 600px;
+      z-index: 2;
+      transform: translateY(20px);
+      opacity: 0;
+      animation: fadeInUp 0.8s 0.3s forwards;
+    }
+
+    .hero h1 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 3.5rem;
+      font-weight: 700;
+      margin-bottom: 1.5rem;
+      line-height: 1.2;
+      color: var(--primary-light);
+      text-shadow: 0 0 15px rgba(138, 43, 226, 0.4);
+    }
+
+    .hero p {
+      font-size: 1.2rem;
+      margin-bottom: 2rem;
+      color: var(--gray);
+    }
+
+    .hero-btns {
+      display: flex;
+      gap: 1rem;
+    }
+
+    .btn-outline {
+      background-color: transparent;
+      color: var(--primary-light);
+      border: 2px solid var(--primary);
+      box-shadow: none;
+    }
+
+    .btn-outline:hover {
+      background-color: rgba(203, 92, 192, 0.1);
+      color: var(--primary-light);
+      border-color: var(--primary-light);
+    }
+
+    .hero-image {
+      position: absolute;
+      right: 10%;
+      width: 40%;
+      max-width: 600px;
+      opacity: 0;
+      transform: translateX(50px);
+      animation: fadeInRight 1s 1.2s forwards;
+      border-radius: 20px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+      border: 2px solid var(--primary);
+    }
+
+    /* Features Section */
+    .features {
+      padding: 8rem 10%;
+      background-color: rgba(10, 10, 10, 0.7);
+      position: relative;
+    }
+
+    .section-title {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 2.5rem;
+      text-align: center;
+      margin-bottom: 3rem;
+      color: var(--primary-light);
+      position: relative;
+    }
+
+    .section-title::after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80px;
+      height: 3px;
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      border-radius: 3px;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+    }
+
+    .feature-card {
+      background: rgba(30, 30, 30, 0.7);
+      border-radius: 16px;
+      padding: 2rem;
+      border: 1px solid rgba(138, 43, 226, 0.1);
+      transition: var(--transition);
+      transform: translateY(20px);
+      opacity: 0;
+    }
+
+    .feature-card:nth-child(1) {
+      animation: fadeInUp 0.8s 0.6s forwards;
+    }
+    .feature-card:nth-child(2) {
+      animation: fadeInUp 0.8s 0.9s forwards;
+    }
+    .feature-card:nth-child(3) {
+      animation: fadeInUp 0.8s 1.2s forwards;
+    }
+    .feature-card:nth-child(4) {
+      animation: fadeInUp 0.8s 1.5s forwards;
+    }
+    .feature-card:nth-child(5) {
+      animation: fadeInUp 0.8s 1.8s forwards;
+    }
+    .feature-card:nth-child(6) {
+      animation: fadeInUp 0.8s 2.1s forwards;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-10px);
+      border-color: var(--primary);
+      box-shadow: 0 15px 40px rgba(226, 43, 195, 0.2);
+      background: rgba(226, 43, 195, 0.2);
+     
+    }
+
+    .feature-icon {
+      font-size: 2.5rem;
+      color: var(--primary);
+      margin-bottom: 1.5rem;
+      text-shadow: 0 0 10px rgba(138, 43, 226, 0.4);
+    }
+
+    .feature-title {
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+      color: var(--primary-light);
+    }
+
+    /* Study Room Demo */
+    .demo {
+      padding: 8rem 10%;
+      text-align: center;
+      background: radial-gradient(circle at 30% 70%, rgba(138, 43, 226, 0.1) 0%, transparent 40%);
+    }
+
+    .demo-container {
+      max-width: 1000px;
+      margin: 0 auto;
+      background: rgba(30, 30, 30, 0.7);
+      border-radius: 16px;
+      padding: 3rem;
+      border: 1px solid rgba(138, 43, 226, 0.2);
+      box-shadow: 0 20px 50px rgba(138, 43, 226, 0.2);
+    }
+
+    .room-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+    }
+
+    .room-title {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.8rem;
+      color: var(--primary-light);
+    }
+
+    .room-stats {
+      display: flex;
+      gap: 1rem;
+    }
+
+    .stat-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.9rem;
+    }
+
+    .stat-icon {
+      color: var(--primary);
+    }
+
+    .room-display {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      margin-bottom: 3rem;
+    }
+
+    .participant {
+      background: rgba(40, 40, 40, 0.7);
+      border-radius: 12px;
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transition: var(--transition);
+      border: 1px solid transparent;
+    }
+
+    .participant:hover {
+      border-color: var(--primary);
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(138, 43, 226, 0.2);
+    }
+
+    .participant-avatar {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1rem;
+      color: var(--light);
+      font-weight: bold;
+      font-size: 1.8rem;
+      transition: var(--transition);
+      box-shadow: 0 5px 15px rgba(138, 43, 226, 0.3);
+    }
+
+    .participant:hover .participant-avatar {
+      transform: rotate(15deg) scale(1.1);
+      background: linear-gradient(135deg, var(--primary-light), var(--primary));
+    }
+
+    .participant-name {
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .participant-status {
+      font-size: 0.9rem;
+      color: var(--gray);
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+
+    .status-indicator {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background-color: var(--secondary);
+    }
+
+    .timer-section {
+      margin: 2rem 0;
+    }
+
+    .timer-display {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 4rem;
+      color: var(--primary-light);
+      margin: 1rem 0;
+      text-shadow: 0 0 10px rgba(138, 43, 226, 0.4);
+    }
+
+    .timer-label {
+      font-size: 1.2rem;
+      margin-bottom: 1rem;
+      color: var(--gray);
+    }
+
+    .timer-progress {
+      width: 100%;
+      height: 6px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 3px;
+      margin-bottom: 2rem;
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      height: 100%;
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      border-radius: 3px;
+      width: 60%;
+      transition: width 0.5s ease;
+    }
+
+    .timer-controls {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .timer-btn {
+      padding: 0.8rem 2rem;
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: var(--light);
+      border: none;
+      border-radius: 50px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      box-shadow: 0 4px 15px rgba(138, 43, 226, 0.3);
+    }
+
+    .timer-btn:hover {
+      background: linear-gradient(135deg, var(--primary-light), var(--primary));
+      transform: translateY(-3px);
+      box-shadow: 0 10px 25px rgba(138, 43, 226, 0.4);
+    }
+
+    .timer-btn:active {
+      transform: translateY(0);
+    }
+
+    .timer-btn.secondary {
+      background: transparent;
+      color: var(--primary-light);
+      border: 2px solid var(--primary);
+      box-shadow: none;
+    }
+
+    .timer-btn.secondary:hover {
+      background: rgba(138, 43, 226, 0.1);
+    }
+
+    /* AI Assistant Section */
+    .ai-assistant {
+      padding: 8rem 10%;
+      background-color: rgba(10, 10, 10, 0.7);
+      position: relative;
+    }
+
+    .assistant-container {
+      max-width: 1000px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+      align-items: center;
+    }
+
+    .assistant-image {
+      position: relative;
+      text-align: center;
+    }
+
+    .assistant-avatar {
+      width: 100%;
+      max-width: 400px;
+      border-radius: 20px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+      transition: var(--transition);
+      filter: hue-rotate(10deg) saturate(1.2);
+      border: 2px solid var(--primary);
+    }
+
+    .assistant-avatar:hover {
+      transform: translateY(-10px);
+      filter: hue-rotate(0) saturate(1.4);
+    }
+
+    .assistant-image::before {
+      content: '';
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border: 3px solid var(--primary-light);
+      border-radius: 20px;
+      top: 20px;
+      left: 20px;
+      z-index: -1;
+      transition: var(--transition);
+    }
+
+    .assistant-image:hover::before {
+      top: 15px;
+      left: 15px;
+    }
+
+    .assistant-features {
+      list-style: none;
+    }
+
+    .assistant-feature {
+      margin-bottom: 1.5rem;
+      position: relative;
+      padding-left: 40px;
+    }
+
+    .feature-icon {
+      position: absolute;
+      left: 0;
+      top: 5px;
+      color: var(--primary);
+      font-size: 1.5rem;
+    }
+
+    .feature-heading {
+      font-size: 1.3rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      color: var(--primary-light);
+    }
+
+    /* Testimonials */
+    .testimonials {
+      padding: 8rem 10%;
+      text-align: center;
+    }
+
+    .testimonial-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+      margin-top: 3rem;
+    }
+
+    .testimonial-card {
+      background: rgba(30, 30, 30, 0.7);
+      border-radius: 16px;
+      padding: 2rem;
+      border: 1px solid rgba(138, 43, 226, 0.1);
+      transition: var(--transition);
+      text-align: left;
+    }
+
+    .testimonial-card:hover {
+      transform: translateY(-10px);
+      border-color: var(--primary);
+      box-shadow: 0 15px 40px rgba(133, 192, 227, 0.2);
+      background: rgba(40, 40, 40, 0.7);
+    }
+
+    .testimonial-text {
+      font-style: italic;
+      margin-bottom: 1.5rem;
+      position: relative;
+    }
+
+    .testimonial-text::before,
+    .testimonial-text::after {
+      content: '"';
+      color: var(--primary);
+      font-size: 2rem;
+      line-height: 0;
+    }
+
+    .testimonial-text::before {
+      vertical-align: -0.4em;
+      margin-right: 0.2em;
+    }
+
+    .testimonial-text::after {
+      vertical-align: -0.6em;
+      margin-left: 0.2em;
+    }
+
+    .testimonial-author {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .author-avatar {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--light);
+      font-weight: bold;
+      box-shadow: 0 5px 15px rgba(138, 43, 226, 0.3);
+    }
+
+    .author-info h4 {
+      font-weight: 600;
+    }
+
+    .author-info p {
+      font-size: 0.9rem;
+      color: var(--gray);
+    }
+
+    /* CTA Section */
+    .cta {
+      padding: 8rem 10%;
+      text-align: center;
+      background: radial-gradient(circle at 70% 30%, rgba(138, 43, 226, 0.1) 0%, transparent 40%);
+    }
+
+    .cta-container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .cta-btns {
+      display: flex;
+      justify-content: center;
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+
+    /* Footer */
+    .footer {
+      padding: 4rem 10%;
+      background-color: rgba(8, 8, 8, 0.95);
+      text-align: center;
+      border-top: 1px solid rgba(138, 43, 226, 0.2);
+    }
+
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .footer-links a {
+      color: var(--gray);
+      text-decoration: none;
+      transition: var(--transition);
+    }
+
+    .footer-links a:hover {
+      color: var(--primary-light);
+    }
+
+    .social-links {
+      display: flex;
+      justify-content: center;
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .social-links a {
+      color: var(--light);
+      font-size: 1.5rem;
+      transition: var(--transition);
+    }
+
+    .social-links a:hover {
+      color: var(--primary-light);
+      transform: translateY(-3px);
+      text-shadow: 0 0 10px rgba(138, 43, 226, 0.4);
+    }
+
+    .copyright {
+      color: var(--gray);
+      font-size: 0.9rem;
+    }
+
+    /* Animations */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fadeInRight {
+      from {
+        opacity: 0;
+        transform: translateX(50px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    @keyframes float {
+      0%, 100% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(-10px);
+      }
+    }
+
+    @keyframes ripple {
+      0% {
+        transform: scale(0, 0);
+        opacity: 1;
+      }
+      20% {
+        transform: scale(25, 25);
+        opacity: 1;
+      }
+      100% {
+        opacity: 0;
+        transform: scale(40, 40);
+      }
+    }
+
+    /* Responsive Design */
+    @media (max-width: 992px) {
+      .section-title {
+        font-size: 2.2rem;
+      }
+      .assistant-container {
+        grid-template-columns: 1fr;
+      }
+      .assistant-image {
+        order: -1;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .hero h1 {
+        font-size: 2.5rem;
+      }
+      .hero-image {
+        display: none;
+      }
+      .room-display {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .room-header {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+      }
+      .cta-btns {
+        flex-direction: column;
+        align-items: center;
+      }
+    }
+
+    @media (max-width: 576px) {
+      .hero h1 {
+        font-size: 2rem;
+      }
+      .section-title {
+        font-size: 1.8rem;
+      }
+      .room-display {
+        grid-template-columns: 1fr;
+      }
+      .timer-controls {
+        flex-direction: column;
+      }
+      .timer-btn {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation -->
+  <nav class="navbar">
+    <a href="#" class="logo">
+      <i class="fas fa-atom logo-icon"></i>
+      StudySphere
+    </a>
+    <div class="nav-links">
+      <a href="#features">Features</a>
+      <a href="#demo">Demo</a>
+      <a href="#ai">AI Assistant</a>
+      <a href="#testimonials">Testimonials</a>
+      <a href="#" class="btn">Join Now</a>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-content">
+      <h1>Revolutionize Your Study Sessions</h1>
+      <p>Join thousands of students in our AI-powered virtual study environment. Boost productivity, stay accountable, and achieve your learning goals faster.</p>
+      <div class="hero-btns">
+        <a href="#" class="btn">Start Free Trial</a>
+        <a href="#demo" class="btn btn-outline">See Demo</a>
+      </div>
+    </div>
+    <div class="hero-image">
+      <img src="https://images.unsplash.com/photo-1588072432836-e10032774350?q=80&w=2072&auto=format&fit=crop" alt="Students collaborating" style="width:100%;">
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section class="features" id="features">
+    <h2 class="section-title">Why Choose StudySphere?</h2>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">
+          <i class="fas fa-users"></i>
+        </div>
+        <h3 class="feature-title">Collaborative Study Rooms</h3>
+        <p>Create or join themed study rooms with peers worldwide. Optional video/audio keeps everyone accountable.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <i class="fas fa-clock"></i>
+        </div>
+        <h3 class="feature-title">Smart Pomodoro System</h3>
+        <p>Synchronized timers with customizable intervals. Track your focus sessions and breaks with detailed analytics.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <i class="fas fa-robot"></i>
+        </div>
+        <h3 class="feature-title">AI Study Assistant</h3>
+        <p>Personalized check-ins, mood tracking, and adaptive study recommendations based on your performance.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <i class="fas fa-chart-line"></i>
+        </div>
+        <h3 class="feature-title">Progress Tracking</h3>
+        <p>Visualize your study patterns, productivity trends, and goal completion with our intuitive dashboards.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <i class="fas fa-trophy"></i>
+        </div>
+        <h3 class="feature-title">Gamification</h3>
+        <p>Earn badges, compete on leaderboards, and unlock achievements to stay motivated in your learning journey.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <i class="fas fa-mobile-alt"></i>
+        </div>
+        <h3 class="feature-title">Cross-Platform</h3>
+        <p>Access your study rooms from any device - desktop, tablet, or mobile. Your progress syncs automatically.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Demo Section -->
+  <section class="demo" id="demo">
+    <h2 class="section-title">Live Study Room Demo</h2>
+    <div class="demo-container">
+      <div class="room-header">
+        <h3 class="room-title">Computer Science Study Group</h3>
+        <div class="room-stats">
+          <div class="stat-item">
+            <i class="fas fa-users stat-icon"></i>
+            <span>12 Active</span>
+          </div>
+          <div class="stat-item">
+            <i class="fas fa-clock stat-icon"></i>
+            <span>2h 15m Avg</span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="room-display">
+        <div class="participant">
+          <div class="participant-avatar">F</div>
+          <h4 class="participant-name">Famna</h4>
+          <p class="participant-status">
+            <span class="status-indicator"></span>
+            Studying: Web Development
+          </p>
+        </div>
+        <div class="participant">
+          <div class="participant-avatar">A</div>
+          <h4 class="participant-name">Arfa Umarfaruk</h4>
+          <p class="participant-status">
+            <span class="status-indicator"></span>
+            Studying: Algorithms
+          </p>
+        </div>
+        <div class="participant">
+          <div class="participant-avatar">A</div>
+          <h4 class="participant-name">Ameema</h4>
+          <p class="participant-status">
+            <span class="status-indicator"></span>
+            Studying: Database Systems
+          </p>
+        </div>
+        <div class="participant">
+          <div class="participant-avatar">S</div>
+          <h4 class="participant-name">Shanima</h4>
+          <p class="participant-status">
+            <span class="status-indicator"></span>
+            On Break
+          </p>
+        </div>
+        <div class="participant">
+          <div class="participant-avatar">S</div>
+          <h4 class="participant-name">Safa</h4>
+          <p class="participant-status">
+            <span class="status-indicator"></span>
+            Studying: Machine Learning
+          </p>
+        </div>
+        <div class="participant">
+          <div class="participant-avatar">+5</div>
+          <h4 class="participant-name">Others</h4>
+          <p class="participant-status">
+            <span class="status-indicator"></span>
+            Actively studying
+          </p>
+        </div>
+      </div>
+      
+      <div class="timer-section">
+        <p class="timer-label">Group Focus Session</p>
+        <div class="timer-display">24:37</div>
+        <div class="timer-progress">
+          <div class="progress-bar"></div>
+        </div>
+        
+        <div class="timer-controls">
+          <button class="timer-btn">
+            <i class="fas fa-play"></i>
+            Start Session
+          </button>
+          <button class="timer-btn secondary">
+            <i class="fas fa-cog"></i>
+            Settings
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- AI Assistant Section -->
+  <section class="ai-assistant" id="ai">
+    <h2 class="section-title">Your Personal Study AI</h2>
+    <div class="assistant-container">
+      <div class="assistant-image">
+        <img src="https://img.freepik.com/premium-photo/robot-with-computer-screen-that-says-robot-screen_1104726-15331.jpg" alt="AI Assistant" class="assistant-avatar">
+      </div>
+      <div class="assistant-content">
+        <h3>Meet Nova - Your Study Companion</h3>
+        <p>Our AI assistant helps you stay on track with personalized support and intelligent features:</p>
+        
+        <ul class="assistant-features">
+          <li class="assistant-feature">
+            <i class="fas fa-calendar-check feature-icon"></i>
+            <h4 class="feature-heading">Daily Check-ins</h4>
+            <p>Start each session with a quick mood check and goal setting to optimize your mindset.</p>
+          </li>
+          <li class="assistant-feature">
+            <i class="fas fa-brain feature-icon"></i>
+            <h4 class="feature-heading">Focus Analysis</h4>
+            <p>Get real-time feedback on your concentration levels and suggestions for improvement.</p>
+          </li>
+          <li class="assistant-feature">
+            <i class="fas fa-book feature-icon"></i>
+            <h4 class="feature-heading">Smart Reminders</h4>
+            <p>Never forget important concepts with spaced repetition and intelligent recall prompts.</p>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimonials Section -->
+  <section class="testimonials" id="testimonials">
+    <h2 class="section-title">What Our Users Say</h2>
+    <div class="testimonial-grid">
+      <div class="testimonial-card">
+        <p class="testimonial-text">StudySphere completely transformed my study habits. The accountability from group sessions helped me stay consistent, and I've improved my grades by two letter grades!</p>
+        <div class="testimonial-author">
+          <div class="author-avatar">S</div>
+          <div class="author-info">
+            <h4>Sarah Johnson</h4>
+            <p>Computer Science Student</p>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <p class="testimonial-text">The AI assistant is surprisingly helpful. It knows when I'm losing focus and suggests perfect breaks. My study sessions are now 40% more productive.</p>
+        <div class="testimonial-author">
+          <div class="author-avatar">M</div>
+          <div class="author-info">
+            <h4>Michael Chen</h4>
+            <p>Medical Student</p>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <p class="testimonial-text">As a remote worker, I use StudySphere for deep work sessions. The Pomodoro timer with group energy keeps me motivated throughout the day.</p>
+        <div class="testimonial-author">
+          <div class="author-avatar">A</div>
+          <div class="author-info">
+            <h4>Amanda Rodriguez</h4>
+            <p>Software Developer</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="cta">
+    <div class="cta-container">
+      <h2 class="section-title">Ready to Transform Your Study Habits?</h2>
+      <p>Join thousands of students and professionals who are achieving more with StudySphere.</p>
+      <div class="cta-btns">
+        <a href="#" class="btn">Start Free 7-Day Trial</a>
+        <a href="#" class="btn btn-outline">Learn More</a>
+      </div>
+    </div>
+  </section>
+
+
+  <script>
+    // Simple timer functionality for demo
+    const timerDisplay = document.querySelector('.timer-display');
+    const progressBar = document.querySelector('.progress-bar');
+    const timerButtons = document.querySelectorAll('.timer-btn');
+    let seconds = 1477; // 24:37
+    let timerInterval;
+    let isRunning = false;
+    
+    function updateTimerDisplay() {
+      const mins = Math.floor(seconds / 60);
+      const secs = seconds % 60;
+      timerDisplay.textContent = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+      const progress = (1 - (seconds / 1500)) * 100;
+      progressBar.style.width = `${progress}%`;
+    }
+    
+    timerButtons[0].addEventListener('click', () => {
+      if (!isRunning) {
+        isRunning = true;
+        timerButtons[0].innerHTML = '<i class="fas fa-pause"></i> Pause Session';
+        timerInterval = setInterval(() => {
+          if (seconds > 0) {
+            seconds--;
+            updateTimerDisplay();
+          } else {
+            clearInterval(timerInterval);
+            timerDisplay.textContent = "00:00";
+            timerButtons[0].innerHTML = '<i class="fas fa-check"></i> Session Complete';
+            isRunning = false;
+          }
+        }, 1000);
+      } else {
+        clearInterval(timerInterval);
+        timerButtons[0].innerHTML = '<i class="fas fa-play"></i> Resume Session';
+        isRunning = false;
+      }
+    });
+    
+    timerButtons[1].addEventListener('click', () => {
+      // In a real app, this would open settings
+      alert('Timer settings would appear here');
+    });
+    
+    updateTimerDisplay();
+    
+    // Navbar scroll effect
+    window.addEventListener('scroll', () => {
+      const navbar = document.querySelector('.navbar');
+      if (window.scrollY > 50) {
+        navbar.classList.add('scrolled');
+      } else {
+        navbar.classList.remove('scrolled');
+      }
+    });
+
+    // Participant hover effects
+    const participants = document.querySelectorAll('.participant');
+    participants.forEach(participant => {
+      participant.addEventListener('mouseenter', () => {
+        const avatar = participant.querySelector('.participant-avatar');
+        avatar.style.transform = 'rotate(15deg) scale(1.1)';
+      });
+      participant.addEventListener('mouseleave', () => {
+        const avatar = participant.querySelector('.participant-avatar');
+        avatar.style.transform = 'rotate(0) scale(1)';
+      });
+    });
+
+    // Button ripple effect
+    const buttons = document.querySelectorAll('.btn');
+    buttons.forEach(button => {
+      button.addEventListener('click', function(e) {
+        e.preventDefault();
+        let x = e.clientX - e.target.getBoundingClientRect().left;
+        let y = e.clientY - e.target.getBoundingClientRect().top;
+        
+        let ripples = document.createElement('span');
+        ripples.style.left = x + 'px';
+        ripples.style.top = y + 'px';
+        this.appendChild(ripples);
+        
+        setTimeout(() => {
+          ripples.remove();
+        }, 1000);
+      });
+    });
+
+    // Smooth scrolling for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function(e) {
+        e.preventDefault();
+        document.querySelector(this.getAttribute('href')).scrollIntoView({
+          behavior: 'smooth'
+        });
+      });
+    });
+  </script>
+</body>
+</html>
